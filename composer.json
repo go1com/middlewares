@@ -1,0 +1,10 @@
+{
+  "name": "go1/middleware",
+  "autoload": {
+    "classmap": ["src"]
+  },
+  "requires": {
+    "guzzlehttp/guzzle": "^6.0",
+    "symfony/http-foundation": "^3.0"
+  }
+}
