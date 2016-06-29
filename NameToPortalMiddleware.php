@@ -24,7 +24,7 @@ class NameToPortalMiddleware
 
     public function __invoke(Request $req)
     {
-        $name = $req->attributes->get('portal');
+        $name = $req->get('portal');
         if ($name) {
             $this->cacheId = str_replace('%NAME%', $name, $this->cacheId);
 
@@ -65,6 +65,6 @@ class NameToPortalMiddleware
             return new JsonResponse($response, 404);
         }
 
-        $req->attributes->set('portalEntity', $portal);
+        $req->attributes->set('portal', $portal);
     }
 }
