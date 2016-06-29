@@ -1,7 +1,7 @@
 {
   "name": "go1/middlewares",
   "autoload": {
-    "classmap": ["src"]
+    "classmap": ["./"]
   },
   "requires": {
     "guzzlehttp/guzzle": "^6.0",
