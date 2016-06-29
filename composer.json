@@ -1,5 +1,5 @@
 {
-  "name": "go1/middleware",
+  "name": "go1/middlewares",
   "autoload": {
     "classmap": ["src"]
   },
