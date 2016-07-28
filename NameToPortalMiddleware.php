@@ -19,12 +19,13 @@ class NameToPortalMiddleware
     {
         $this->cache = $cache;
         $this->client = $client;
-        $this->portalUrl = $portalUrl;
+        $this->portalUrl = rtrim($portalUrl, '/');
     }
 
     public function __invoke(Request $req)
     {
         $name = $req->get('portal');
+
         if ($name) {
             $this->cacheId = str_replace('%NAME%', $name, $this->cacheId);
 
@@ -47,7 +48,8 @@ class NameToPortalMiddleware
             $portal = $this->cache->fetch($cacheId);
             $is404 = 404 === $portal;
         }
-        else {
+
+        if (empty($portal)) {
             $url = "{$this->portalUrl}/{$name}";
             $portal = json_decode($this->client->get($url)->getBody()->getContents());
             if (strtolower($name) !== strtolower($portal->title)) {
