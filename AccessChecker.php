@@ -2,6 +2,7 @@
 
 namespace go1\middleware;
 
+use stdClass;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -12,7 +13,7 @@ class AccessChecker
     /**
      * @param Request $req
      * @param string  $portalName
-     * @return null|bool|1
+     * @return null|bool|stdClass
      */
     public function isPortalAdmin(Request $req, $portalName)
     {
@@ -28,7 +29,7 @@ class AccessChecker
         foreach ($accounts as &$account) {
             if ($portalName === $account->instance) {
                 if (!empty($account->roles) && in_array('administrator', $account->roles)) {
-                    return true;
+                    return $account;
                 }
             }
         }
@@ -42,13 +43,13 @@ class AccessChecker
             return null;
         }
 
-        return in_array('Admin on #Accounts', isset($user->roles) ? $user->roles : []);
+        return in_array('Admin on #Accounts', isset($user->roles) ? $user->roles : []) ? $user : false;
     }
 
     private function getUser(Request $req)
     {
         $payload = $req->get('jwt.payload');
-        if ('user' === $payload->object->type) {
+        if ($payload && ('user' === $payload->object->type)) {
             $user = &$payload->object->content;
             if (!empty($user->mail)) {
                 return $user;
