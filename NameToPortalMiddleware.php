@@ -52,7 +52,8 @@ class NameToPortalMiddleware
         if (empty($portal)) {
             $url = "{$this->portalUrl}/{$name}";
             $portal = json_decode($this->client->get($url)->getBody()->getContents());
-            if (strtolower($name) !== strtolower($portal->title)) {
+
+            if (!$portal) {
                 $is404 = true;
                 $this->cache->save($cacheId, 404, $ttl = 30);
             }
