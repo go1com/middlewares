@@ -21,7 +21,7 @@ class AccessChecker
             return 1;
         }
 
-        if (!$user = $this->getUser($req)) {
+        if (!$user = $this->validUser($req)) {
             return null;
         }
 
@@ -39,14 +39,14 @@ class AccessChecker
 
     public function isAccountsAdmin(Request $req)
     {
-        if (!$user = $this->getUser($req)) {
+        if (!$user = $this->validUser($req)) {
             return null;
         }
 
         return in_array('Admin on #Accounts', isset($user->roles) ? $user->roles : []) ? $user : false;
     }
 
-    private function getUser(Request $req)
+    public function validUser(Request $req)
     {
         $payload = $req->get('jwt.payload');
         if ($payload && ('user' === $payload->object->type)) {
@@ -61,7 +61,7 @@ class AccessChecker
 
     public function isOwner(Request $req, $profileId)
     {
-        if (!$user = $this->getUser($req)) {
+        if (!$user = $this->validUser($req)) {
             return false;
         }
 
