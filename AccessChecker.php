@@ -58,4 +58,13 @@ class AccessChecker
 
         return false;
     }
+
+    public function isOwner(Request $req, $profileId)
+    {
+        if (!$user = $this->getUser($req)) {
+            return false;
+        }
+
+        return $user->profile_id == $profileId;
+    }
 }
