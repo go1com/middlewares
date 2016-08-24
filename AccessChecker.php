@@ -89,4 +89,24 @@ class AccessChecker
 
         return $user->profile_id == $profileId;
     }
+
+    public function hasAccount(Request $req, $portalName)
+    {
+        if (!$user = $this->validUser($req)) {
+            return false;
+        }
+
+        if ($this->isPortalTutor($req, $portalName)) {
+            return true;
+        }
+
+        $accounts = isset($user->accounts) ? $user->accounts : [];
+        foreach ($accounts as &$account) {
+            if ($portalName === $account->instance) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
