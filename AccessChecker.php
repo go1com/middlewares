@@ -37,6 +37,28 @@ class AccessChecker
         return false;
     }
 
+    public function isPortalTutor(Request $req, $portalName)
+    {
+        if ($this->isPortalAdmin($req, $portalName)) {
+            return 1;
+        }
+
+        if (!$user = $this->validUser($req)) {
+            return null;
+        }
+
+        $accounts = isset($user->accounts) ? $user->accounts : [];
+        foreach ($accounts as &$account) {
+            if ($portalName === $account->instance) {
+                if (!empty($account->roles) && in_array('Tutor', $account->roles)) {
+                    return $account;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function isAccountsAdmin(Request $req)
     {
         if (!$user = $this->validUser($req)) {
