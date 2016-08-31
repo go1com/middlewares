@@ -37,7 +37,7 @@ class AccessChecker
         return false;
     }
 
-    public function isPortalTutor(Request $req, $portalName)
+    public function isPortalTutor(Request $req, $portalName, $role = 'Tutor')
     {
         if ($this->isPortalAdmin($req, $portalName)) {
             return 1;
@@ -50,13 +50,18 @@ class AccessChecker
         $accounts = isset($user->accounts) ? $user->accounts : [];
         foreach ($accounts as &$account) {
             if ($portalName === $account->instance) {
-                if (!empty($account->roles) && in_array('Tutor', $account->roles)) {
+                if (!empty($account->roles) && in_array($role, $account->roles)) {
                     return $account;
                 }
             }
         }
 
         return false;
+    }
+
+    public function isPortalManager(Request $req, $portalName)
+    {
+        return $this->isPortalTutor($req, $portalName, 'Manager');
     }
 
     public function isAccountsAdmin(Request $req)
