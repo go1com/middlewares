@@ -76,7 +76,7 @@ class AccessChecker
     public function validUser(Request $req)
     {
         $payload = $req->get('jwt.payload');
-        if ($payload && ('user' === $payload->object->type)) {
+        if ($payload && !empty($payload->object->type) && ('user' === $payload->object->type)) {
             $user = &$payload->object->content;
             if (!empty($user->mail)) {
                 return $user;
