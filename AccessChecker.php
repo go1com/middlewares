@@ -17,12 +17,12 @@ class AccessChecker
      */
     public function isPortalAdmin(Request $req, $portalName)
     {
-        if ($this->isAccountsAdmin($req)) {
-            return 1;
-        }
-
         if (!$user = $this->validUser($req)) {
             return null;
+        }
+
+        if ($this->isAccountsAdmin($req)) {
+            return 1;
         }
 
         $accounts = isset($user->accounts) ? $user->accounts : [];
