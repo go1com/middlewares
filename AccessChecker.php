@@ -4,6 +4,8 @@ namespace go1\middleware;
 
 use stdClass;
 use Symfony\Component\HttpFoundation\Request;
+use Doctrine\DBAL\Connection;
+use PDO;
 
 /**
  * This is not a middleware, but useful to share across our micro services.
@@ -109,6 +111,36 @@ class AccessChecker
         foreach ($accounts as &$account) {
             if ($portalName === $account->instance) {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isStudentManager(Connection $db, Request $req, $studentMail, $portalName, $hasManagerCode = 504)
+    {
+        if (!$user = $this->validUser($req)) {
+            return null;
+        }
+
+        $accounts = isset($user->accounts) ? $user->accounts : [];
+        if (isset($user->mail) && $studentMail) {
+            foreach ($accounts as &$account) {
+                if ($portalName == $account->instance) {
+                    $isManager = $db
+                        ->fetchColumn(
+                            'SELECT 1 FROM gc_ro'
+                            . ' WHERE type = ?'
+                            . '     AND source_id = (SELECT id FROM gc_user WHERE instance = ? AND mail = ?)'
+                            . '     AND target_id = (SELECT id FROM gc_user WHERE instance = ? AND mail = ?)',
+                            [$hasManagerCode, $portalName, $studentMail, $portalName, $user->mail],
+                            0,
+                            [PDO::PARAM_INT, PDO::PARAM_STR, PDO::PARAM_STR, PDO::PARAM_STR, PDO::PARAM_STR]
+                        );
+                    if ($isManager) {
+                        return true;
+                    }
+                }
             }
         }
 
