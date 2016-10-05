@@ -123,9 +123,8 @@ class AccessChecker
             return null;
         }
 
-        $accounts = isset($user->accounts) ? $user->accounts : [];
-        if (isset($user->mail) && $studentMail) {
-            foreach ($accounts as &$account) {
+        if (isset($user->mail) && $studentMail && !empty($user->accounts)) {
+            foreach ($user->accounts as &$account) {
                 if ($portalName == $account->instance) {
                     $isManager = $db
                         ->fetchColumn(
