@@ -5,7 +5,7 @@
   },
   "requires": {
     "guzzlehttp/guzzle": "^6.0",
-    "silex/silex": "^2.0.0",
+    "silex/silex": "^1.0.0|^2.0.0",
     "symfony/http-foundation": "^3.0"
   }
 }
