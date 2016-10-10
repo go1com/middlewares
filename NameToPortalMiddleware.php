@@ -24,12 +24,10 @@ class NameToPortalMiddleware
 
     public function __invoke(Request $req)
     {
-        $name = $req->get('portal');
-
-        if ($name) {
-            $this->cacheId = str_replace('%NAME%', $name, $this->cacheId);
-
+        if ($name = $req->get('portal')) {
             try {
+                $this->cacheId = str_replace('%NAME%', $name, $this->cacheId);
+
                 return $this->get($name, $this->cacheId, $req);
             }
             catch (HttpException $e) {
@@ -63,9 +61,7 @@ class NameToPortalMiddleware
         }
 
         if ($is404) {
-            $response = ['error' => 'Failed to load portal.', 'message' => 'Portal not found.'];
-
-            return new JsonResponse($response, 404);
+            return new JsonResponse(['error' => 'Failed to load portal.', 'message' => 'Portal not found.'], 404);
         }
 
         $req->attributes->set('portal', $portal);
