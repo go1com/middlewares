@@ -2,13 +2,13 @@
 
 namespace go1\middleware;
 
-use stdClass;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\Connection;
 use PDO;
+use stdClass;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This is not a middleware, but useful to share across our micro services.
+ * @deprecated Please use \go1\util\AccessChecker
  */
 class AccessChecker
 {
