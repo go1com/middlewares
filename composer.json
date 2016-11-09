@@ -1,7 +1,9 @@
 {
   "name": "go1/middlewares",
   "autoload": {
-    "classmap": ["./"]
+    "psr-4": {
+      "go1\\middleware\\": "./"
+    }
   },
   "requires": {
     "go1/util": "dev-master",
