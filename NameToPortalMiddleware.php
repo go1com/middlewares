@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class NameToPortalMiddleware
 {
@@ -26,9 +27,12 @@ class NameToPortalMiddleware
     {
         if ($name = $req->get('portal')) {
             try {
-                $this->cacheId = str_replace('%NAME%', $name, $this->cacheId);
+                $response = $this->fetch($name);
+                if ($response instanceof Response) {
+                    return $response;
+                }
 
-                return $this->get($name, $this->cacheId, $req);
+                $req->attributes->set('portal', $response);
             }
             catch (HttpException $e) {
                 $response = ['error' => 'Failed to load portal.', 'message' => $e->getMessage()];
@@ -38,9 +42,11 @@ class NameToPortalMiddleware
         }
     }
 
-    private function get($name, $cacheId, Request $req)
+    public function load($name)
     {
         $is404 = false;
+        $portal = false;
+        $cacheId = str_replace('%NAME%', $name, $this->cacheId);
 
         if ($this->cache->contains($cacheId)) {
             $portal = $this->cache->fetch($cacheId);
@@ -60,10 +66,6 @@ class NameToPortalMiddleware
             }
         }
 
-        if ($is404) {
-            return new JsonResponse(['error' => 'Failed to load portal.', 'message' => 'Portal not found.'], 404);
-        }
-
-        $req->attributes->set('portal', $portal);
+        return !$is404 ? $portal : new JsonResponse(['error' => 'Failed to load portal.', 'message' => 'Portal not found.'], 404);
     }
 }
