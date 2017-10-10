@@ -16,5 +16,10 @@ class MiddlewareServiceProvider implements ServiceProviderInterface
         $c['middleware.uuid-to-jwt'] = function (Container $c) {
             return new UuidToJwtMiddleware($c['cache'], $c['client'], $c['user_url'], $c['private_key']);
         };
+
+        $c['flood.middleware'] = function (Container $c) {
+            $f = $c['flood.options'];
+            return new FloodMiddleware($c['flood'], $f['ip.limit'], $f['ip.window'], $f['event.name']);
+        };
     }
 }
