@@ -5,6 +5,7 @@ namespace go1\report_helpers\tests;
 use Doctrine\DBAL\DriverManager;
 use go1\flood\Flood;
 use go1\middleware\FloodMiddleware;
+use go1\util\Error;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Vectorface\Whip\Whip;
@@ -24,7 +25,7 @@ class FloodMiddlewareTest extends TestCase
 
         $response = $floodMiddleWare->__invoke(new Request());
         $this->assertInstanceOf("Symfony\Component\HttpFoundation\JsonResponse", $response);
-        $this->assertEquals(429, $response->getStatusCode());
+        $this->assertEquals(Error::TOO_MANY_REQUESTS, $response->getStatusCode());
         $this->assertEquals(3, $flood->count($eventName));
     }
 }
