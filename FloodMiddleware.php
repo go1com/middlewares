@@ -24,7 +24,7 @@ class FloodMiddleware
     {
         // Make sure the IP address is not blocked.
         if (!$this->flood->isAllowed($this->eventName, $this->ipLimit, $this->ipWindow)) {
-            return Error::simpleErrorJsonResponse('Too many connections on same IP address.', 429);
+            return Error::simpleErrorJsonResponse('Too many connections on same IP address.', Error::TOO_MANY_REQUESTS);
         }
         $this->flood->register($this->eventName, $this->ipWindow);
     }
