@@ -5,6 +5,7 @@ namespace go1\middleware;
 use Doctrine\Common\Cache\CacheProvider;
 use go1\util\ErrorCodes;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +40,9 @@ class NameToPortalMiddleware
                 $response = ['message' => 'Failed to load portal.', 'code' => ErrorCodes::X_SERVICE_UNREACHABLE];
 
                 return new JsonResponse($response, 500);
+            }
+            catch (ClientException $e) {
+                return new JsonResponse(['message' => 'Failed to load portal'], $e->getCode());
             }
         }
     }
