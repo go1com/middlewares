@@ -55,7 +55,7 @@ class NameToPortalMiddleware
         }
 
         if (empty($portal)) {
-            $url = "{$this->portalUrl}/{$name}";
+            $url = "{$this->portalUrl}/{$name}?noKeyFixing=1";
             $portal = json_decode($this->client->get($url, ['http_errors' => false])->getBody()->getContents());
 
             if (!$portal) {
