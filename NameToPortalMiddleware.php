@@ -23,9 +23,9 @@ class NameToPortalMiddleware
         $this->portalUrl = rtrim($portalUrl, '/');
     }
 
-    public function __invoke(Request $req)
+    public function __invoke(Request $req, string $key = 'portal')
     {
-        if ($name = $req->get('portal')) {
+        if ($name = $req->get($key)) {
             try {
                 $response = $this->load($name);
                 if ($response instanceof Response) {
