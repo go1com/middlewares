@@ -19,6 +19,7 @@ class MiddlewareServiceProvider implements ServiceProviderInterface
 
         $c['flood.middleware'] = function (Container $c) {
             $f = $c['flood.options'];
+
             return new FloodMiddleware($c['flood'], $f['ip.limit'], $f['ip.window'], $f['event.name']);
         };
     }

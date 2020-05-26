@@ -26,8 +26,9 @@ class FloodMiddleware
         if (!$this->flood->isAllowed($this->eventName, $this->ipLimit, $this->ipWindow)) {
             return Error::simpleErrorJsonResponse('Too many connections on same IP address.', Error::TOO_MANY_REQUESTS);
         }
+
         $this->flood->register($this->eventName, $this->ipWindow);
+
+        return null;
     }
-
-
 }

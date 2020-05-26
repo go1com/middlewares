@@ -38,8 +38,7 @@ class UuidToJwtMiddleware
         if ($this->cache->contains($cacheId)) {
             $jwt = $this->cache->fetch($cacheId);
             $is404 = 404 === $jwt;
-        }
-        else {
+        } else {
             $url = "{$this->userUrl}/account/current/{$uuid}";
             $headers = ['JWT-Private-Key' => $this->privateKey];
             $current = json_decode($this->client->get($url, ['headers' => $headers])->getBody()->getContents());
@@ -53,5 +52,7 @@ class UuidToJwtMiddleware
         }
 
         $req->headers->set('Authorization', "Bearer {$jwt}");
+
+        return null;
     }
 }
