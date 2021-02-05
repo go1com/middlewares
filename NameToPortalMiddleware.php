@@ -23,11 +23,11 @@ class NameToPortalMiddleware
         $this->portalUrl = rtrim($portalUrl, '/');
     }
 
-    public function __invoke(Request $req, string $key = 'portal')
+    public function __invoke(Request $req, string $key = 'portal', $bypassCache = false)
     {
         if ($name = $req->get($key)) {
             try {
-                $response = $this->load($name);
+                $response = $this->load($name, $bypassCache);
                 if ($response instanceof Response) {
                     return $response;
                 }
@@ -41,13 +41,13 @@ class NameToPortalMiddleware
         }
     }
 
-    public function load($name)
+    public function load($name, $bypassCache)
     {
         $is404 = false;
         $portal = false;
         $cacheId = str_replace('%NAME%', $name, $this->cacheId);
 
-        if ($this->cache->contains($cacheId)) {
+        if (!$bypassCache && $this->cache->contains($cacheId)) {
             $portal = $this->cache->fetch($cacheId);
             $is404 = 404 === $portal;
         }
