@@ -41,13 +41,13 @@ class NameToPortalMiddleware
         }
     }
 
-    public function load($name, $bypassCache)
+    public function load(string $name, bool $noCache)
     {
         $is404 = false;
         $portal = false;
         $cacheId = str_replace('%NAME%', $name, $this->cacheId);
 
-        if (!$bypassCache && $this->cache->contains($cacheId)) {
+        if (!$noCache && $this->cache->contains($cacheId)) {
             $portal = $this->cache->fetch($cacheId);
             $is404 = 404 === $portal;
         }
