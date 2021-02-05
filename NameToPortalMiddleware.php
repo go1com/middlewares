@@ -23,11 +23,11 @@ class NameToPortalMiddleware
         $this->portalUrl = rtrim($portalUrl, '/');
     }
 
-    public function __invoke(Request $req, string $key = 'portal', $bypassCache = false)
+    public function __invoke(Request $req, string $key = 'portal', bool $noCache = false)
     {
         if ($name = $req->get($key)) {
             try {
-                $response = $this->load($name, $bypassCache);
+                $response = $this->load($name, $noCache);
                 if ($response instanceof Response) {
                     return $response;
                 }
