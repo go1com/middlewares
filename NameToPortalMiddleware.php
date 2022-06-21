@@ -54,12 +54,13 @@ class NameToPortalMiddleware
 
         if (empty($portal)) {
             $url = "{$this->portalUrl}/{$name}?noKeyFixing=1";
-            $portal = json_decode($this->client->get($url, ['http_errors' => false])->getBody()->getContents());
+            $res = $this->client->get($url, ['http_errors' => false]);
 
-            if (!$portal) {
+            if ($res->getStatusCode() == 404) {
                 $is404 = true;
                 $this->cache->save($cacheId, 404, $ttl = 30);
-            } else {
+            } else if ($res->getStatusCode() == 200) {
+                $portal = json_decode($res->getBody()->getContents());
                 $this->cache->save($cacheId, $portal, $tll = 120);
             }
         }
